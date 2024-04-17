@@ -1,0 +1,22 @@
+jwt:
+  secret: asdsadaad23r324yf214uyf12fo21y4ft21f421uf4yu12f412asdsadaad23r324yf214uyf12fo21y4ft21f421uf4yu12f412asdsadaad23r324yf214uyf12fo21y4ft21f421uf4yu12f412asdsadaad23r324yf214uyf12fo21y4ft21f421uf4yu12f412
+
+server:
+  ssl:
+    key-store: classpath:keystore/keystore.jks
+    key-store-password: qwerty
+    key-store-type: JKS
+    key-password: qwerty
+spring:
+  security:
+
+
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 244221050743-6dpueh5dal4v3kblf0tesfp4m6dgmqie.apps.googleusercontent.com
+#            client-secret: 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
+#logging:
+#  level:
+#    root: debug
