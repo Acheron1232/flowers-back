@@ -10,7 +10,10 @@ server:
 spring:
   security:
 
-
+aws:
+  region: eu-north-1
+  access_key: AKIA5Q2A6DOFL6W4K37Z
+  secret_access_key: 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
 #    oauth2:
 #      client:
 #        registration:
