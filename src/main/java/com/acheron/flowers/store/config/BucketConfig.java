@@ -1,4 +1,4 @@
-package com.acheron.flowers.config;
+package com.acheron.flowers.store.config;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

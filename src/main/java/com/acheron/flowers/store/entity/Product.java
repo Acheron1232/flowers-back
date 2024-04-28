@@ -1,4 +1,4 @@
-package com.acheron.flowers.entity;
+package com.acheron.flowers.store.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

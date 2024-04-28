@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v2")
+@RequestMapping("/api/v2/user")
 public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;

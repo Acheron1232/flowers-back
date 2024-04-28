@@ -1,4 +1,4 @@
-package com.acheron.flowers.service;
+package com.acheron.flowers.store.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;

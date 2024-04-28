@@ -1,4 +1,4 @@
-package com.acheron.flowers.controller;
+package com.acheron.flowers.store.controller;
 
 
 import lombok.RequiredArgsConstructor;

@@ -48,7 +48,7 @@ public class SecurityConfig {
         csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())).
                 cors(Customizer.withDefaults()).
                 authorizeHttpRequests(request ->
-                        request.requestMatchers("/api/v2/login", "/api/v2/registration", "/api/v1/permit", "/api/v2/csrf").
+                        request.requestMatchers("/api/v2/login", "/api/v2/registration", "/api/v1/permit", "/api/v2/csrf","/swagger-ui/**","/v3/api-docs/**").
                                 permitAll().
 //                                requestMatchers("/api/v2/asd","/getUserData").
 //                                hasAuthority(Role.USER.getAuthority()).
