@@ -10,6 +10,19 @@ server:
 spring:
   security:
 
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: aryemfedorov@gmail.com
+    password: 0LCYqR1IE4c76mBW
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  allowed-cors: https://localhost:5173
+
 aws:
   region: eu-north-1
   access_key: AKIA5Q2A6DOFL6W4K37Z
@@ -22,4 +35,6 @@ aws:
 #            client-secret: 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
 #logging:
 #  level:
-#    root: debug
+#    org.springframework.security.web.csrf: debug
+
+

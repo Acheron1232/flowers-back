@@ -1,6 +1,6 @@
-package com.acheron.flowers.security.exception;
+package com.acheron.flowers.security.exception.custom;
 
-public class UserAlreadyExistsException extends Exception {
+public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException(String errorMessage) {
         super(errorMessage);
     }

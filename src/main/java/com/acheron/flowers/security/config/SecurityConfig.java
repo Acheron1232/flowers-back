@@ -1,6 +1,7 @@
 package com.acheron.flowers.security.config;
 
-import com.acheron.flowers.security.jwt.JwtFilter;
+import com.acheron.flowers.security.entity.Role;
+import com.acheron.flowers.security.jwt.JwtCookieFilter;
 import com.acheron.flowers.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,7 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,41 +24,48 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig {
 
     private final UserService userService;
-    private final JwtFilter jwtFilter;
+    private final JwtCookieFilter jwtFilter;
 
-//    @Value("${spring.allowed-cors}")
-//    private String cors;
+    @Value("${spring.allowed-cors}")
+    private String cors;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:5173").allowedOriginPatterns("*");
+                registry.addMapping("/**").allowedOrigins("https://localhost:5173/", cors).
+                        allowedOriginPatterns("*").exposedHeaders("*", "Set-Cookie", "X-XSRF-TOKEN").allowCredentials(true);
             }
         };
     }
+
 
     @SneakyThrows
     @Bean
     public SecurityFilterChain getFilterChain(HttpSecurity http) {
         return http.
                 sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
-//                csrf(AbstractHttpConfigurer::disable).
-        csrf(csrfConf -> csrfConf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
-        csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())).
-                cors(Customizer.withDefaults()).
+                csrf(AbstractHttpConfigurer::disable).
+//        csrf(csrfConf -> csrfConf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
+//        csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()).
+//        ignoringRequestMatchers("/api/v2/login","/api/v2/csrf")).
+        cors(Customizer.withDefaults()).
                 authorizeHttpRequests(request ->
-                        request.requestMatchers("/api/v2/login", "/api/v2/registration", "/api/v1/permit", "/api/v2/csrf","/swagger-ui/**","/v3/api-docs/**").
+                        request.requestMatchers(
+//                                        "api/v2/logout",
+                                        "/api/v2/login", "/api/v2/registration",
+                                        "/api/v2/csrf", "/swagger-ui/**", "/v3/api-docs/**").
                                 permitAll().
-//                                requestMatchers("/api/v2/asd","/getUserData").
-//                                hasAuthority(Role.USER.getAuthority()).
-        anyRequest().
+                                requestMatchers("/api/v2/user/**", "/api/v1/permit").authenticated().
+                                requestMatchers("/api/v2/admin/**").hasAuthority(Role.ADMIN.getAuthority()).
+                                anyRequest().
                                 authenticated()).
                 userDetailsService(userService).
-                addFilterBefore(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class).
-                addFilterBefore(jwtFilter, CsrfCookieFilter.class).
-                build();
+                addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).
+//                addFilterBefore(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class).
+//                addFilterAfter(jwtFilter, CsrfCookieFilter.class).
+        build();
     }
 
     @Bean
