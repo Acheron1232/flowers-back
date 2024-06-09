@@ -35,7 +35,9 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("https://localhost:5173/", cors).
-                        allowedOriginPatterns("*").exposedHeaders("*", "Set-Cookie", "X-XSRF-TOKEN").allowCredentials(true);
+                        allowedOriginPatterns("*").exposedHeaders("*", "Set-Cookie", "X-XSRF-TOKEN")
+                        .allowedMethods("GET","POST","PUT","PATCH","DELETE")
+                        .allowCredentials(true);
             }
         };
     }
@@ -61,6 +63,7 @@ public class SecurityConfig {
                                 requestMatchers("/api/v2/admin/**").hasAuthority(Role.ADMIN.getAuthority()).
                                 anyRequest().
                                 authenticated()).
+//                                permitAll()).
                 userDetailsService(userService).
                 addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).
 //                addFilterBefore(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class).

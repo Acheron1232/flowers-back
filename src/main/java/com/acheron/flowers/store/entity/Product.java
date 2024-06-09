@@ -18,14 +18,14 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    @Enumerated(EnumType.STRING)
-    private Size size;
-    private String description;
+    private String uaName;
+    private String enName;
+    private String uaDescription;
+    private String enDescription;
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ProductImage> images;
 
 }
