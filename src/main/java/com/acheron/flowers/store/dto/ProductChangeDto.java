@@ -13,5 +13,6 @@ public class ProductChangeDto {
     private String enName;
     private String uaDescription;
     private String enDescription;
+    private Integer price;
     private Long categoryId;
 }

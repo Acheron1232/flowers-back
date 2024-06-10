@@ -4,9 +4,7 @@ import com.acheron.flowers.store.dto.CategoryChangeDto;
 import com.acheron.flowers.store.dto.CategorySaveDto;
 import com.acheron.flowers.store.entity.Category;
 import com.acheron.flowers.store.repository.CategoryRepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,7 +43,7 @@ public class CategoryService {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         } else
-            return ResponseEntity.badRequest().body("Category with id: " + categoryChangeDto.getId() + " not exists");
+            return ResponseEntity.badRequest().body("Category with id: " + categoryChangeDto.getId() + " does not exists");
     }
 
 
@@ -57,7 +55,7 @@ public class CategoryService {
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        } else return ResponseEntity.badRequest().body("Category with id: " + id + " not exists");
+        } else return ResponseEntity.badRequest().body("Category with id: " + id + " does not exists");
     }
 
     public List<Category> findAll(Pageable pageable) {

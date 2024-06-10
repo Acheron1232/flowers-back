@@ -22,10 +22,13 @@ public class Product {
     private String enName;
     private String uaDescription;
     private String enDescription;
+    private Integer price;
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ProductImage> images;
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    private List<Property> properties;
 
 }

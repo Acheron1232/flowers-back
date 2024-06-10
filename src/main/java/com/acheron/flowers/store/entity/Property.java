@@ -8,14 +8,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product_image")
 @Builder
-public class ProductImage {
+public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String image;
+    private String uaKey;
+    private String enKey;
+    private String uaValue;
+    private String enValue;
     @ManyToOne
     @JsonIgnore
     @ToString.Exclude

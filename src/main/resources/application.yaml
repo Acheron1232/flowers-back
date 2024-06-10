@@ -8,6 +8,10 @@ server:
     key-store-type: JKS
     key-password: qwerty
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   security:
 
   mail:
@@ -25,8 +29,8 @@ spring:
 
 aws:
   region: eu-north-1
-  access_key: AKIA5Q2A6DOFL6W4K37Z
-  secret_access_key: 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
+  access_key: AKIAQ3EGTR3EFKYW4DEE
+  secret_access_key: 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
   bucket-name: flowers-ua
 #    oauth2:
 #      client:

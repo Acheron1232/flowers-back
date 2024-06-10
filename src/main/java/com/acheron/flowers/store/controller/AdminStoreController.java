@@ -1,16 +1,16 @@
 package com.acheron.flowers.store.controller;
 
-import com.acheron.flowers.store.dto.CategoryChangeDto;
-import com.acheron.flowers.store.dto.CategorySaveDto;
-import com.acheron.flowers.store.dto.ProductChangeDto;
-import com.acheron.flowers.store.dto.ProductSaveDto;
-import com.acheron.flowers.store.entity.Category;
+import com.acheron.flowers.store.dto.*;
+import com.acheron.flowers.store.entity.Property;
 import com.acheron.flowers.store.service.CategoryService;
+import com.acheron.flowers.store.service.ProductImageService;
 import com.acheron.flowers.store.service.ProductService;
+import com.acheron.flowers.store.service.PropertyService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/admin/")
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminStoreController {
     private final CategoryService categoryService;
     private final ProductService productService;
+    private final ProductImageService productImageService;
+    private final PropertyService propertyService;
 
     //category
     @PostMapping("/category")
@@ -36,7 +38,7 @@ public class AdminStoreController {
 
             return categoryService.delete(objectNode.get("id").asLong());
         } catch (NullPointerException e) {
-            return ResponseEntity.badRequest().body("id is not correct");
+            return ResponseEntity.badRequest().body("Id is not correct");
         }
     }
 
@@ -57,7 +59,44 @@ public class AdminStoreController {
 
             return productService.delete(objectNode.get("id").asLong());
         } catch (NullPointerException e) {
-            return ResponseEntity.badRequest().body("id is not correct");
+            return ResponseEntity.badRequest().body("Id is not correct");
+        }
+    }
+
+    //image
+
+    @PostMapping("/image/{id}")
+    public ResponseEntity<?> saveImage(@PathVariable Long id, @RequestPart MultipartFile file){
+        return productImageService.save(id,file);
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<?> deleteImage(@RequestBody ObjectNode objectNode){
+        try {
+            return productImageService.delete(objectNode.get("id").asLong());
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body("Id is not correct");
+        }
+    }
+
+    //property
+
+    @PostMapping("/property")
+    public ResponseEntity<?> saveProperty(@RequestBody PropertySaveDto propertySaveDto){
+        return propertyService.save(propertySaveDto);
+    }
+
+    @PutMapping("/property")
+    public ResponseEntity<?> changeProperty(@RequestBody PropertyChangeDto propertyChangeDto){
+        return propertyService.save(propertyChangeDto);
+    }
+
+    @DeleteMapping("/property")
+    public ResponseEntity<?> deleteProperty(@RequestBody ObjectNode objectNode){
+        try {
+            return propertyService.delete(objectNode.get("id").asLong());
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body("Id is not correct");
         }
     }
 }
