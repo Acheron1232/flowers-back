@@ -1,5 +1,7 @@
 package com.acheron.flowers.security.controller;
 
+import com.acheron.flowers.security.dto.UserChangeAdminDto;
+import com.acheron.flowers.security.dto.UserChangeDto;
 import com.acheron.flowers.security.entity.User;
 import com.acheron.flowers.security.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/users")
-    public List<User> findAll(@RequestParam(required = false) Integer pageId, @RequestParam(required = false) Integer pageSize) {
+    public List<User> findAll(@RequestParam(required = false,defaultValue = "0") Integer pageId, @RequestParam(required = false,defaultValue = "20") Integer pageSize) {
         return adminService.findAll(pageId, pageSize);
     }
 
@@ -30,8 +32,7 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> changeUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-        return adminService.changeUser(user);
+    public ResponseEntity<?> changeUser(@PathVariable Long id, @RequestBody UserChangeAdminDto user) {
+        return adminService.changeUser(user,id);
     }
 }

@@ -15,8 +15,10 @@ CREATE TABLE product
     ua_name        text UNIQUE not null,
     en_name        text UNIQUE not null,
     category_id    int         not null references category (id),
-    price          int         not null,
---     size        text        not null default 'DEFAULT',
+    price_usd      decimal(10,2)     not null,
+    price_uah      decimal(10,2)     not null,
+    ua_content     text,
+    en_content     text,
     ua_description text,
     en_description text
 );

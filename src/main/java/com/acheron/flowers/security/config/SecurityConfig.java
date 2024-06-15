@@ -56,6 +56,7 @@ public class SecurityConfig {
                 authorizeHttpRequests(request ->
                         request.requestMatchers(
 //                                        "api/v2/logout",
+                                "asd",
                                         "/api/v2/login", "/api/v2/registration",
                                         "/api/v2/csrf", "/swagger-ui/**", "/v3/api-docs/**").
                                 permitAll().

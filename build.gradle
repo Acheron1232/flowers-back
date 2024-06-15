@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.acheron'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
     sourceCompatibility = '21'
@@ -16,9 +16,18 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+configurations.implementation {
+    exclude group: 'commons-logging', module: 'commons-logging'
+}
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://github.com/liqpay/sdk-java/raw/repository'
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
 }
 jar {
     enabled false
@@ -27,7 +36,9 @@ dependencies {
     var jjwt = '0.11.5'
     var s3 = '1.12.655'
     var swagger = '2.5.0'
+    var liqpay = '0.8-SNAPSHOT'
 
+    implementation "com.liqpay:liqpay-sdk:${liqpay}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swagger}"
     implementation "com.amazonaws:aws-java-sdk-s3:${s3}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'

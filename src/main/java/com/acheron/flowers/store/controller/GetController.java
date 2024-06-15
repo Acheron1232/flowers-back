@@ -21,25 +21,20 @@ public class GetController {
     public ResponseEntity<?> getProducts(@RequestParam(defaultValue = "0") Integer pageNumber,
                                          @RequestParam(defaultValue = "20") Integer pageSize) {
         return ResponseEntity.ok(productService.findAll(PageRequest.of(pageNumber, pageSize)));
-
     }
     @GetMapping("/categories")
     public ResponseEntity<?> getCategories(@RequestParam(defaultValue = "0") Integer pageNumber,
                                          @RequestParam(defaultValue = "20") Integer pageSize) {
         return ResponseEntity.ok(categoryService.findAll(PageRequest.of(pageNumber, pageSize)));
-
     }
 
     @GetMapping("/image/{id}")
     public ResponseEntity<?> getImage(@PathVariable Long id){
         try{
-
             String url = imageService.findById(id).orElseThrow();
             return ResponseEntity.ok(url);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
 }

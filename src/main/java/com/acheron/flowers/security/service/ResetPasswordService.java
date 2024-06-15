@@ -26,8 +26,8 @@ public class ResetPasswordService {
         return userResetPasswordTokenRepository.findByToken(token).orElseThrow().getUser();
     }
 
-    public void updatePassword(User user, String newPassword) {
-        user.setPassword(newPassword);
-        userService.save(user);
-    }
+//    public void updatePassword(User user, String newPassword) {
+//        user.setPassword(newPassword);
+//        userService.save(user);
+//    }
 }

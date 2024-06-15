@@ -4,6 +4,7 @@ import com.acheron.flowers.security.dto.PasswordChangeDto;
 import com.acheron.flowers.security.dto.UserChangeDto;
 
 import com.acheron.flowers.security.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
@@ -26,8 +27,8 @@ public class UserController {
     }
 
     @PutMapping("/changeUser")
-    public ResponseEntity<?> changeUser(Principal principal, @RequestBody UserChangeDto userChangeDto) {
-        return userService.changeUser(principal,userChangeDto);
+    public ResponseEntity<?> changeUser(Principal principal, @RequestBody UserChangeDto userChangeDto, HttpServletResponse response) {
+        return userService.changeUser(principal,userChangeDto,response);
     }
 
     @PatchMapping("/changePassword")

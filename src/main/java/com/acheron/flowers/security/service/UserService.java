@@ -6,8 +6,11 @@ import com.acheron.flowers.security.dto.UserChangeDto;
 import com.acheron.flowers.security.entity.Role;
 import com.acheron.flowers.security.entity.User;
 import com.acheron.flowers.security.exception.custom.UserAlreadyExistsException;
+import com.acheron.flowers.security.jwt.JwtUtil;
 import com.acheron.flowers.security.mapper.UserMapper;
 import com.acheron.flowers.security.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final JwtUtil jwtUtil;
 
     public ResponseEntity<?> getCurrentUser(Principal principal){
         User user = findByEmail(principal.getName()).orElse(null);
@@ -40,10 +44,21 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ResponseEntity<?> changeUser(Principal principal, UserChangeDto userChangeDto) {
+//    public boolean isExist(String name){
+//        userRepository.ex
+//    }
+
+    public ResponseEntity<?> changeUser(Principal principal, UserChangeDto userChangeDto, HttpServletResponse response) {
         User user = findByEmail(principal.getName()).orElse(null);
         if (user != null) {
-            User newUser = save(userMapper.mapFromUserChangeDto(userChangeDto, user));
+            User changedUser = userMapper.mapFromUserChangeDto(userChangeDto, user);
+            if(userChangeDto.getEmail()!=null && !userChangeDto.getEmail().isBlank()){
+                changedUser.setEmail(userChangeDto.getEmail());
+
+                Cookie cookie = createCookie(jwtUtil.generateToken(changedUser));
+                response.addCookie(cookie);
+            }
+            User newUser = save(changedUser,true);
             return ResponseEntity.ok(newUser);
         } else {
             return ResponseEntity.status(401).body("Unauthorized");
@@ -63,8 +78,8 @@ public class UserService implements UserDetailsService {
                 throw new BadCredentialsException("Bad credentials");
             }
             if (passwordChangeDto.getNewPassword() != null){
-//                user.setPassword(passwordEncoder.encode(passwordChangeDto.getNewPassword()));
-                save(user);
+                user.setPassword(passwordChangeDto.getNewPassword());
+                save(user,false);
                 return ResponseEntity.ok("Successful");
             }else {
                 return ResponseEntity.badRequest().body("Bad request");
@@ -105,13 +120,24 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public User save(User user,boolean isPasswordEncoded) {
+        if(!isPasswordEncoded){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userRepository.save(user);
     }
 
     public boolean delete(Long id) {
         userRepository.deleteById(id);
         return true;
+    }
+
+    public Cookie createCookie(String jwt) {
+        Cookie cookie = new Cookie("accessToken", jwt);
+        cookie.setMaxAge(200000);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        return cookie;
     }
 }

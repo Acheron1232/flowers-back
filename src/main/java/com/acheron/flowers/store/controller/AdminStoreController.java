@@ -1,11 +1,7 @@
 package com.acheron.flowers.store.controller;
 
 import com.acheron.flowers.store.dto.*;
-import com.acheron.flowers.store.entity.Property;
-import com.acheron.flowers.store.service.CategoryService;
-import com.acheron.flowers.store.service.ProductImageService;
-import com.acheron.flowers.store.service.ProductService;
-import com.acheron.flowers.store.service.PropertyService;
+import com.acheron.flowers.store.service.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +16,7 @@ public class AdminStoreController {
     private final ProductService productService;
     private final ProductImageService productImageService;
     private final PropertyService propertyService;
+    private final PromotionService promotionService;
 
     //category
     @PostMapping("/category")
@@ -35,7 +32,6 @@ public class AdminStoreController {
     @DeleteMapping("/category")
     public ResponseEntity<?> deleteCategory(@RequestBody ObjectNode objectNode) {
         try {
-
             return categoryService.delete(objectNode.get("id").asLong());
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().body("Id is not correct");
@@ -56,7 +52,6 @@ public class AdminStoreController {
     @DeleteMapping("/product")
     public ResponseEntity<?> deleteProduct(@RequestBody ObjectNode objectNode){
         try {
-
             return productService.delete(objectNode.get("id").asLong());
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().body("Id is not correct");
@@ -98,5 +93,12 @@ public class AdminStoreController {
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().body("Id is not correct");
         }
+    }
+
+    //promotion
+
+    @PostMapping("/promotion")
+    public ResponseEntity<?> savePromotion(@RequestBody PromotionSaveDto promotionSaveDto){
+        return promotionService.save(promotionSaveDto);
     }
 }

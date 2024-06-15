@@ -1,6 +1,9 @@
 package com.acheron.flowers.security.service;
 
+import com.acheron.flowers.security.dto.UserChangeAdminDto;
+import com.acheron.flowers.security.dto.UserChangeDto;
 import com.acheron.flowers.security.entity.User;
+import com.acheron.flowers.security.exception.custom.UserNotFoundException;
 import com.acheron.flowers.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +16,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AdminService {
     private final UserService userService;
     private final UserRepository userRepository;
@@ -28,17 +30,25 @@ public class AdminService {
         return userService.findById(id);
     }
 
-    public ResponseEntity<?> changeUser(User user){
+    public ResponseEntity<?> changeUser(UserChangeAdminDto userDto, Long id){
         try{
-            User newUser = userService.save(user);
+            User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
+            User newUser = userService.save(new User(
+                    user.getId(),
+                    userDto.getFirstName()!=null? userDto.getFirstName() : user.getFirstName(),
+                    userDto.getLastName()!=null? userDto.getLastName() : user.getLastName(),
+                    userDto.getEmail()!=null? userDto.getEmail() : user.getEmail(),
+                    userDto.getPassword()!=null? userDto.getPassword() : user.getPassword(),
+                    userDto.getPhoneNumber()!=null? userDto.getPhoneNumber() : user.getPhoneNumber(),
+                    userDto.getRole()!=null? userDto.getRole() : user.getRole()
+            ),false);
             return ResponseEntity.ok(newUser);
         }catch (Exception e){
-            log.debug(e.getMessage());
-            return ResponseEntity.badRequest().body("Error changing");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     public ResponseEntity<String> delete(Long id){
-        return userService.delete(id) ? ResponseEntity.ok("Successfully deleted") : ResponseEntity.badRequest().body("Error deleting");
+        return userService.delete(id) ? ResponseEntity.ok("Success") : ResponseEntity.badRequest().body("Error deleting");
     }
 }

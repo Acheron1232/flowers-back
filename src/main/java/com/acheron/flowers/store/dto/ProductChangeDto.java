@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,9 @@ public class ProductChangeDto {
     private String enName;
     private String uaDescription;
     private String enDescription;
-    private Integer price;
+    private String uaContent;
+    private String enContent;
+    private BigDecimal priceUsd;
+    private BigDecimal priceUah;
     private Long categoryId;
 }

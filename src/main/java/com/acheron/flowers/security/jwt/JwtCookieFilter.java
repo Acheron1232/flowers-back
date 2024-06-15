@@ -1,6 +1,8 @@
 package com.acheron.flowers.security.jwt;
 
 
+import com.acheron.flowers.security.entity.User;
+import com.acheron.flowers.security.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,23 +18,32 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class JwtCookieFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
-        Cookie cookie = cookies!=null?Arrays.stream(cookies).filter(cookie1 -> cookie1.getName().equals("accessToken")).findFirst().orElse(null):null;
+        Cookie cookie = cookies != null ? Arrays.stream(cookies).filter(cookie1 -> cookie1.getName().equals("accessToken")).findFirst().orElse(null) : null;
         String jwt = null;
         String username = null;
+        List<String> roles = null;
         if (cookie != null) {
             jwt = cookie.getValue();
             try {
                 username = jwtUtil.getUsername(jwt);
+                User user = userService.findByEmail(username).orElse(null);
+                roles = jwtUtil.getRoles(jwt);
+                if (user != null && !roles.getFirst().equals(user.getRole().getAuthority())) {
+                    roles = List.of(user.getRole().getAuthority());
+                    response.addCookie(userService.createCookie(jwtUtil.generateToken(user)));
+                }
             } catch (ExpiredJwtException e) {
                 response.sendError(403, "Token has expired");
                 return;
@@ -45,7 +56,7 @@ public class JwtCookieFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    jwtUtil.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                    roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }

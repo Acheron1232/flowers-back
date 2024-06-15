@@ -31,7 +31,17 @@ public class ProductService {
         try {
             Category category = categoryService.findById(productSaveDto.getCategoryId()).orElseThrow(() -> new CategoryNotFoundException(productSaveDto.getCategoryId()));
             return ResponseEntity.ok(productRepository.save(
-                    new Product(null, productSaveDto.getUaName(), productSaveDto.getEnName(), productSaveDto.getUaDescription(), productSaveDto.getEnDescription(), productSaveDto.getPrice(), category, null,null)));
+                    new Product(
+                            null,
+                            productSaveDto.getUaName(),
+                            productSaveDto.getEnName(),
+                            productSaveDto.getUaDescription(),
+                            productSaveDto.getEnDescription(),
+                            productSaveDto.getUaContent(),
+                            productSaveDto.getEnContent(),
+                            productSaveDto.getPriceUsd(),
+                            productSaveDto.getPriceUah(),
+                            category, null,null)));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -49,7 +59,10 @@ public class ProductService {
                                         productChangeDto.getEnName() != null ? productChangeDto.getEnName() : product.getEnName(),
                                         productChangeDto.getUaDescription() != null ? productChangeDto.getUaDescription() : product.getUaDescription(),
                                         productChangeDto.getEnDescription() != null ? productChangeDto.getEnDescription() : product.getEnDescription(),
-                                        productChangeDto.getPrice() != null ? productChangeDto.getPrice() : product.getPrice(),
+                                        productChangeDto.getUaContent() != null ? productChangeDto.getUaContent() : product.getUaContent(),
+                                        productChangeDto.getEnContent() != null ? productChangeDto.getEnContent() : product.getEnContent(),
+                                        productChangeDto.getPriceUsd() != null ? productChangeDto.getPriceUsd() : product.getPriceUsd(),
+                                        productChangeDto.getPriceUah() != null ? productChangeDto.getPriceUah() : product.getPriceUah(),
                                         productChangeDto.getCategoryId() != null ? categoryService.findById(productChangeDto.getCategoryId()).orElseThrow(() -> new CategoryNotFoundException(productChangeDto.getId())) : product.getCategory(),
                                         product.getImages(),
                                         product.getProperties()
